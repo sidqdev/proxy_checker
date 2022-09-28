@@ -62,7 +62,7 @@ def check_proxy(proxy: Proxy):
 def check():
     proxies = Proxy.objects.all()
     for proxy in proxies:
-        Thread(target=check_proxy, args=(proxy,))
+        Thread(target=check_proxy, args=(proxy,)).start()
         time.sleep(0.05)
     
 
