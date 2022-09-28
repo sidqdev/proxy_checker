@@ -38,7 +38,7 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
         session.mount('http://', adapter)
         session.mount('https://', adapter)
 
-        resp = session.get(url, proxies=proxy, timeout=5)
+        resp = session.get(url, proxies=proxy, timeout=10)
 
         # resp = requests.get(url, proxies=proxy, timeout=5)
         print(resp.status_code, host, resp.text)
