@@ -1,6 +1,8 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from .models import Proxy, Settings
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from telebot import TeleBot
 import os
 
@@ -30,8 +32,17 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
 
 
     try:
-        resp = requests.get(url, proxies=proxy, timeout=5)
+        session = requests.Session()
+        retry = Retry(connect=3, backoff_factor=0.5)
+        adapter = HTTPAdapter(max_retries=retry)
+        session.mount('http://', adapter)
+        session.mount('https://', adapter)
+
+        resp = session.get(url, proxies=proxy, timeout=5)
+
+        # resp = requests.get(url, proxies=proxy, timeout=5)
         print(resp.status_code, host, resp.text)
+        session.close()
         if resp.status_code == 200:
             return True
     except Exception as e:
