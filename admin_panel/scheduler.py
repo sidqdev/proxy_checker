@@ -58,7 +58,13 @@ job = None
 
 
 if os.environ.get('status') == 'ok':
-    job = scheduler.add_job(check, 'interval', seconds=int(Settings.objects.get(id='checking_interval').value or 120))
+    sec = Settings.objects.get(id='checking_interval')
+    if sec:
+        sec = sec.value
+    else:
+        sec = 120
+
+    job = scheduler.add_job(check, 'interval', seconds=int(sec))
     scheduler.start()
 else:
     os.environ.setdefault('status', 'ok')
