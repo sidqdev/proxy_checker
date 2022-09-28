@@ -27,7 +27,7 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
         'http': proxy,
         'https': proxy
     }
-    
+
     if protocol == 'https':
         proxy = {
             'https': proxy
@@ -40,7 +40,7 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
     url = Settings.objects.get(id='check_url').value
 
 
-    try:
+    # try:
         # session = requests.Session()
         # retry = Retry(connect=3, backoff_factor=0.5)
         # adapter = HTTPAdapter(max_retries=retry)
@@ -49,13 +49,13 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
 
         # resp = session.get(url, proxies=proxy, timeout=10)
 
-        resp = requests.get(url, proxies=proxy, timeout=15)
-        print(resp.status_code, host, resp.text)
-        # session.close()
-        if resp.status_code == 200:
-            return True
-    except Exception as e:
-        print(e)
+    resp = requests.get(url, proxies=proxy, timeout=15)
+    print(resp.status_code, host, resp.text)
+    # session.close()
+    if resp.status_code == 200:
+        return True
+    # except Exception as e:
+    #     print(e)
 
     return False
 
