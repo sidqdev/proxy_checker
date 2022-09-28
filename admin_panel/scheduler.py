@@ -32,17 +32,17 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
 
 
     try:
-        session = requests.Session()
-        retry = Retry(connect=3, backoff_factor=0.5)
-        adapter = HTTPAdapter(max_retries=retry)
-        session.mount('http://', adapter)
-        session.mount('https://', adapter)
+        # session = requests.Session()
+        # retry = Retry(connect=3, backoff_factor=0.5)
+        # adapter = HTTPAdapter(max_retries=retry)
+        # session.mount('http://', adapter)
+        # session.mount('https://', adapter)
 
-        resp = session.get(url, proxies=proxy, timeout=10)
+        # resp = session.get(url, proxies=proxy, timeout=10)
 
-        # resp = requests.get(url, proxies=proxy, timeout=5)
+        resp = requests.get(url, proxies=proxy, timeout=15)
         print(resp.status_code, host, resp.text)
-        session.close()
+        # session.close()
         if resp.status_code == 200:
             return True
     except Exception as e:
