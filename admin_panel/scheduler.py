@@ -1,11 +1,13 @@
-from apscheduler.schedulers.background import BackgroundScheduler
-from .models import Proxy, Settings
-import requests
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
-from telebot import TeleBot
 import os
+import time
+import requests
 
+from threading import Thread
+
+from apscheduler.schedulers.background import BackgroundScheduler
+from telebot import TeleBot
+
+from .models import Proxy, Settings
 
 def send_notification(proxy: Proxy):
     bot_token = Settings.objects.get(id='bot_token').value
@@ -32,7 +34,7 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
         proxy = {
             'https': proxy
         }
-        
+
     url = Settings.objects.get(id='check_url').value
 
 
@@ -46,18 +48,23 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
 
     return False
 
-    
+
+def check_proxy(proxy: Proxy):
+    if not is_available_proxy(proxy.protocol.id, proxy.host, proxy.port, proxy.username, proxy.password):
+        if proxy.is_available:
+            send_notification(proxy)
+        proxy.is_available = False
+        proxy.save(force_update=True)
+    else:
+        proxy.is_available = True
+        proxy.save(force_update=True)
+
 def check():
     proxies = Proxy.objects.all()
     for proxy in proxies:
-        if not is_available_proxy(proxy.protocol.id, proxy.host, proxy.port, proxy.username, proxy.password):
-            if proxy.is_available:
-                send_notification(proxy)
-            proxy.is_available = False
-            proxy.save(force_update=True)
-        else:
-            proxy.is_available = True
-            proxy.save(force_update=True)
+        Thread(target=check_proxy, args=(proxy,))
+        time.sleep(0.05)
+    
 
 scheduler = BackgroundScheduler()
 
