@@ -5,7 +5,10 @@ class Protocol(models.Model):
     id = models.CharField(max_length=30, primary_key=True)
     title = models.CharField(max_length=30)
 
+    def __str__(self):
+        return self.title
 
+        
 class Proxy(models.Model):
     info = models.TextField(default='')
     protocol = models.ForeignKey(to=Protocol, on_delete=models.CASCADE)
