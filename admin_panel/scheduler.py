@@ -12,6 +12,7 @@ from .models import Proxy, Settings
 
 
 class HTTPProxyDigestAuth(requests.auth.HTTPDigestAuth):
+    last_nonce = True
     def handle_407(self, r):
         """Takes the given response and tries digest-auth, if needed."""
 
@@ -77,6 +78,7 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
     auth = None
     if username:
         auth = HTTPProxyDigestAuth(username, password)
+
     url = Settings.objects.get(id='check_url').value
 
     for _ in range(int(Settings.objects.get(id='recheck_count').value)):
