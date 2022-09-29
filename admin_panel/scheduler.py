@@ -74,7 +74,9 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
             'http': proxy,
         }
 
-    auth = HTTPProxyDigestAuth(username, password)
+    auth = None
+    if username:
+        auth = HTTPProxyDigestAuth(username, password)
     url = Settings.objects.get(id='check_url').value
 
     for _ in range(int(Settings.objects.get(id='recheck_count').value)):
