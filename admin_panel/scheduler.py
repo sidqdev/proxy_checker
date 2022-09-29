@@ -31,15 +31,6 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
         'http': proxy,
         'https': proxy
     }
-    
-    if protocol == 'https':
-        proxy = {
-            'https': proxy
-        }
-    # if protocol == 'http':
-    #     proxy = {
-    #         'http': proxy,
-    #     }
 
     auth = None
     if username:
