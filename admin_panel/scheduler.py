@@ -1,7 +1,7 @@
 import os
 import time
 import requests
-from requests_digest_proxy import HTTPProxyDigestAuth
+from .requests_digest_proxy import HTTPProxyDigestAuth
 
 from threading import Thread
 
