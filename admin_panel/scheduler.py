@@ -37,14 +37,16 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
 
     url = Settings.objects.get(id='check_url').value
 
+    for _ in range(int(Settings.objects.get(id='recheck_count').value)):
+        try:
+            resp = requests.get(url, proxies=proxy, timeout=5)
+            print(resp.status_code, host, resp.text)
+            if resp.status_code == 200:
+                return True
+        except Exception as e:
+            print(e)
 
-    try:
-        resp = requests.get(url, proxies=proxy, timeout=5)
-        print(resp.status_code, host, resp.text)
-        if resp.status_code == 200:
-            return True
-    except Exception as e:
-        print(e)
+        time.sleep(int(Settings.objects.get(id='recheck_sleep').value))
 
     return False
 
