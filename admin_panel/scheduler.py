@@ -1,7 +1,7 @@
 import os
 import time
 import requests
-from .requests_digest_proxy import HTTPProxyDigestAuth
+from requests.auth import HTTPProxyAuth
 
 from threading import Thread
 
@@ -43,7 +43,7 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
 
     auth = None
     if username:
-        auth = HTTPProxyDigestAuth(username, password)
+        auth = HTTPProxyAuth(username, password)
 
     url = Settings.objects.get(id='check_url').value
 
