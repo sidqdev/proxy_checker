@@ -44,7 +44,7 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
             resp = requests.get(url, proxies=proxy, auth=auth, timeout=5)
             print(resp.status_code, host, resp.text)
             if resp.status_code == 200:
-                return True
+                return True, None
         except Exception as e:
             return False, ' '.join(e.args)
 
