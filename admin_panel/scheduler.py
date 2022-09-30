@@ -46,7 +46,7 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
             if resp.status_code == 200:
                 return True, None
         except Exception as e:
-            print(e.args)
+            print(e.with_traceback)
             return False, ' '.join(e.args)
 
         time.sleep(int(Settings.objects.get(id='recheck_sleep').value))
