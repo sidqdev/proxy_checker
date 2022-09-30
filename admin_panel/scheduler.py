@@ -11,11 +11,11 @@ from telebot import TeleBot
 from .models import Proxy, Settings
 
 
-def send_notification(proxy: Proxy):
+def send_notification(proxy: Proxy, info=None):
     bot_token = Settings.objects.get(id='bot_token').value
     chat_id = int(Settings.objects.get(id='chat_id').value)
 
-    message = f'{proxy.info} proxy is down\n{proxy.host}:{proxy.port}'
+    message = f'{proxy.info} proxy is down\n{proxy.host}:{proxy.port}\n{info if info else ""}'
     try:
         TeleBot(bot_token).send_message(chat_id, message)
     except Exception as e:
@@ -25,6 +25,7 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
     # if username:
     #     proxy = f'{protocol}://{username}:{password}@{host}:{port}'
     # else:
+    e = None
     proxy = f'{protocol}://{host}:{port}'
 
     proxy = {
@@ -45,17 +46,18 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
             if resp.status_code == 200:
                 return True
         except Exception as e:
-            print(e)
+            return False, ' '.join(e.args)
 
         time.sleep(int(Settings.objects.get(id='recheck_sleep').value))
 
-    return False
+    return False, 'Bad status code'
 
 
 def check_proxy(proxy: Proxy):
-    if not is_available_proxy(proxy.protocol.id, proxy.host, proxy.port, proxy.username, proxy.password):
+    is_available, error = is_available_proxy(proxy.protocol.id, proxy.host, proxy.port, proxy.username, proxy.password)
+    if not is_available:
         if proxy.is_available:
-            send_notification(proxy)
+            send_notification(proxy, error)
         proxy.is_available = False
         proxy.save(force_update=True)
     else:
