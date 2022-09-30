@@ -11,11 +11,12 @@ from telebot import TeleBot
 from .models import Proxy, Settings
 
 
-def send_notification(proxy: Proxy, info=None):
+def send_notification(proxy: Proxy, info=None, is_available=False):
     bot_token = Settings.objects.get(id='bot_token').value
     chat_id = int(Settings.objects.get(id='chat_id').value)
 
-    message = f'{proxy.info} proxy is down\n{proxy.host}:{proxy.port}\n\n\n{info if info else ""}'
+    msg = 'proxy is up' if is_available else 'proxy is down'
+    message = f'{proxy.info} {msg}\n{proxy.host}:{proxy.port}\n\n\n{info if info else ""}'
     try:
         TeleBot(bot_token).send_message(chat_id, message)
     except Exception as e:
@@ -61,6 +62,8 @@ def check_proxy(proxy: Proxy):
         proxy.is_available = False
         proxy.save(force_update=True)
     else:
+        if not proxy.is_available:
+            send_notification(proxy, is_available=True)
         proxy.is_available = True
         proxy.save(force_update=True)
 
