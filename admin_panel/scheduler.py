@@ -43,7 +43,7 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
     for _ in range(int(Settings.objects.get(id='recheck_count').value)):
         try:
             resp = requests.get(url, proxies=proxy, auth=auth, timeout=int(Settings.objects.get(id='timeout').value))
-            print(resp.status_code, host, resp.text, resp.text.count('.'))
+            print(resp.status_code, host, resp.text, resp.text.count('.')==3)
             if resp.status_code == 200:
                 if resp.text.count('.') == '3':
                     return True, None, resp.text
