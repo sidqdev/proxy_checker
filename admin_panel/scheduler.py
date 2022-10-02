@@ -40,6 +40,7 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
 
     url = Settings.objects.get(id='check_url').value
 
+    err = 'Bad status code'
     for _ in range(int(Settings.objects.get(id='recheck_count').value)):
         try:
             resp = requests.get(url, proxies=proxy, auth=auth, timeout=int(Settings.objects.get(id='timeout').value))
@@ -48,13 +49,13 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
                 if resp.text.count('.') == 3:
                     return True, None, resp.text
                 else:
-                    return False, 'Incorrect response', ''
+                    err = 'Incorrect response'
         except Exception as e:
-            return False, ' '.join(list(map(str, e.args))), ''
+            err = ' '.join(list(map(str, e.args)))
 
         time.sleep(int(Settings.objects.get(id='recheck_sleep').value))
 
-    return False, 'Bad status code', ''
+    return False, err, ''
 
 
 def check_proxy(proxy: Proxy):
