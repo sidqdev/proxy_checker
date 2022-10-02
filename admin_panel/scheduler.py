@@ -16,7 +16,7 @@ def send_notification(proxy: Proxy, info=None, is_available=False):
     chat_id = int(Settings.objects.get(id='chat_id').value)
 
     msg = 'proxy is up' if is_available else 'proxy is down'
-    message = f'{proxy.info} {msg}\n{proxy.host}:{proxy.port}\n\n\n{info if info else ""}'
+    message = f'{proxy.info} {msg}\nip адрес\n{proxy.host}:{proxy.port}\n{info if info else ""}'
     try:
         TeleBot(bot_token).send_message(chat_id, message)
     except Exception as e:
