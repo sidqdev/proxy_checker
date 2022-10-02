@@ -42,29 +42,34 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
 
     for _ in range(int(Settings.objects.get(id='recheck_count').value)):
         try:
-            resp = requests.get(url, proxies=proxy, auth=auth, timeout=5)
+            resp = requests.get(url, proxies=proxy, auth=auth, timeout=int(Settings.objects.get(id='timeout').value))
             print(resp.status_code, host, resp.text)
             if resp.status_code == 200:
-                return True, None
+                if resp.text.count('.') == '3':
+                    return True, None, resp.text
+                else:
+                    return False, 'Incorrect response', ''
         except Exception as e:
-            return False, ' '.join(list(map(str, e.args)))
+            return False, ' '.join(list(map(str, e.args))), ''
 
         time.sleep(int(Settings.objects.get(id='recheck_sleep').value))
 
-    return False, 'Bad status code'
+    return False, 'Bad status code', ''
 
 
 def check_proxy(proxy: Proxy):
-    is_available, error = is_available_proxy(proxy.protocol.id, proxy.host, proxy.port, proxy.username, proxy.password)
+    is_available, error, resp = is_available_proxy(proxy.protocol.id, proxy.host, proxy.port, proxy.username, proxy.password)
     if not is_available:
         if proxy.is_available:
             send_notification(proxy, error)
         proxy.is_available = False
+        proxy.response = ''
         proxy.save(force_update=True)
     else:
         if not proxy.is_available:
             send_notification(proxy, is_available=True)
         proxy.is_available = True
+        proxy.response = resp
         proxy.save(force_update=True)
 
 def check():

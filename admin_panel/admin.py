@@ -7,7 +7,7 @@ class ProxyAdmin(admin.ModelAdmin):
 
 
 class SettingAdmin(admin.ModelAdmin):
-    list_display = ('id', 'value', 'description')
+    list_display = ('id', 'value', 'description', 'response')
 
     def save_model(self, request, obj: Settings, form, change) -> None:
         if obj.id == 'checking_interval':

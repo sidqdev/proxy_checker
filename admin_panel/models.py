@@ -23,7 +23,7 @@ class Proxy(models.Model):
     password = models.CharField(max_length=256, null=True, blank=True)
 
     is_available = models.BooleanField(default=False)
-
+    response = models.CharField(max_length=32, null=True, blank=True)
     class Meta:
         verbose_name = 'прокси'
         verbose_name_plural = 'прокси'
