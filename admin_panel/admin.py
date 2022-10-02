@@ -3,11 +3,11 @@ from .models import *
 from . import scheduler
 
 class ProxyAdmin(admin.ModelAdmin):
-    list_display = ('protocol', 'host', 'port', 'is_available')
+    list_display = ('protocol', 'host', 'port', 'is_available', 'response')
 
 
 class SettingAdmin(admin.ModelAdmin):
-    list_display = ('id', 'value', 'description', 'response')
+    list_display = ('id', 'value', 'description')
 
     def save_model(self, request, obj: Settings, form, change) -> None:
         if obj.id == 'checking_interval':
