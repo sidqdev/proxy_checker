@@ -59,6 +59,7 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
 
 def check_proxy(proxy: Proxy):
     is_available, error, resp = is_available_proxy(proxy.protocol.id, proxy.host, proxy.port, proxy.username, proxy.password)
+    print(is_available, error, resp)
     if not is_available:
         if proxy.is_available:
             send_notification(proxy, error)
