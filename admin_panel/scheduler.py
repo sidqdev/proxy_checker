@@ -52,7 +52,7 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
             print(resp.status_code, host, resp.text)
             if resp.status_code == 200:
                 if resp.text.count('.') == 3:
-                    ip = json.loads(resp.text).get('ip')
+                    ip = json.loads(resp.text).get('query')
                     return True, None, ip
                 else:
                     err = 'Incorrect response'
