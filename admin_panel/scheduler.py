@@ -70,15 +70,19 @@ def check_proxy(proxy: Proxy):
     if not is_available:
         if proxy.is_available:
             send_notification(proxy, error)
-        proxy.is_available = False
-        proxy.response = ''
-        proxy.save(force_update=True)
+    
+        proxy_for_update = Proxy.objects.get(id=proxy.id)
+        proxy_for_update.is_available = False
+        proxy_for_update.response = ''
+        proxy_for_update.save()
     else:
         if not proxy.is_available:
             send_notification(proxy, is_available=True, ip=resp)
-        proxy.is_available = True
-        proxy.response = resp
-        proxy.save(force_update=True)
+        
+        proxy_for_update = Proxy.objects.get(id=proxy.id)
+        proxy_for_update.is_available = True
+        proxy_for_update.response = resp
+        proxy_for_update.save(force_update=True)
 
 def check():
     proxies = Proxy.objects.all()
