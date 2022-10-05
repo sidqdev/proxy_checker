@@ -3,6 +3,7 @@ from typing import Union
 from xml.dom.minidom import Element
 
 import requests
+from requests.auth import HTTPProxyAuth
 
 from huaweisms.api.config import MODEM_HOST
 from huaweisms.xml.util import get_child_text, get_dictionary_from_children, parse_xml_string
@@ -112,7 +113,7 @@ def post_to_url(url, data, ctx=None, additional_headers=None, timeout=30):
     auth = None
     if ctx and ctx.proxies_config:
         proxies = ctx.proxies_config.get('proxies')
-        auth = ctx.proxies_config.get('auth')
+        auth = HTTPProxyAuth(*ctx.proxies_config.get('auth'))
 
     r = requests.post(url, data=data, headers=headers, cookies=cookies, timeout=timeout, verify=verify, proxies=proxies, auth=auth)
     check_response_headers(r, ctx)
@@ -131,7 +132,7 @@ def get_from_url(url, ctx=None, additional_headers=None, timeout=30):
     auth = None
     if ctx and ctx.proxies_config:
         proxies = ctx.proxies_config.get('proxies')
-        auth = ctx.proxies_config.get('auth')
+        auth = HTTPProxyAuth(*ctx.proxies_config.get('auth'))
 
     print(proxies, auth)
     r = requests.get(url, headers=headers, cookies=cookies, timeout=timeout, verify=verify, proxies=proxies, auth=auth)
