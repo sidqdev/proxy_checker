@@ -133,6 +133,7 @@ def get_from_url(url, ctx=None, additional_headers=None, timeout=30):
         proxies = ctx.proxies_config.get('proxies')
         auth = ctx.proxies_config.get('auth')
 
+    print(proxies, auth)
     r = requests.get(url, headers=headers, cookies=cookies, timeout=timeout, verify=verify, proxies=proxies, auth=auth)
     check_response_headers(r, ctx)
     return api_response(r)
