@@ -40,7 +40,7 @@ def login(ctx, user_name, password):
     <request>
         <Username>{}</Username>
         <Password>{}</Password>
-        <password_type>2</password_type>
+        <password_type>3</password_type>
     </request>
     """.format(
         user_name, password_value
