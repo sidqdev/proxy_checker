@@ -3,10 +3,12 @@ from django.http import HttpResponse, HttpRequest
 from .models import Proxy
 from . import funtions
 from threading import Thread
-
+from datetime import datetime
 
 def change_proxy_ip_endpoint(request: HttpRequest):
     id = int(request.GET.get('id'))
     proxy = Proxy.objects.get(pk=id)
+    proxy.last_ip_change_time = datetime.now()
+    proxy.save()
     Thread(target=funtions.change_proxy_ip, args=(proxy,)).start()
     return HttpResponse("in process")
