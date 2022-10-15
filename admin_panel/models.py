@@ -26,9 +26,12 @@ class Proxy(models.Model):
     is_available = models.BooleanField(default=False)
     response = models.CharField(max_length=32, null=True, blank=True, verbose_name='IP')
 
+    modem_username = models.CharField(max_length=256, null=True, blank=True)
+    modem_password = models.CharField(max_length=256, null=True, blank=True)
+
     last_ip_change_time = models.DateTimeField(default=datetime.now)
     ip_change_interval = models.SmallIntegerField(default=0)
-    reconnect_timeout = models.SmallIntegerField(default=20)
+    reconnect_mode = models.CharField(max_length=256, null=True, blank=True)
     class Meta:
         verbose_name = 'прокси'
         verbose_name_plural = 'прокси'
