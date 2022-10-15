@@ -70,7 +70,9 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
         time.sleep(80)
     except Exception as e:
         print('reboot', e)
-
+        err = 'Cannot connect to modem to reboot'
+        return False, err, ''
+        
     try:
         resp = requests.get(url, proxies=proxy, auth=auth, timeout=int(Settings.objects.get(id='timeout').value))
         print(resp.status_code, host, resp.text)
