@@ -12,7 +12,7 @@ def change_proxy_ip(proxy: Proxy):
     proxies = f'{proxy.protocol}://{proxy.host}:{proxy.port}'
 
     proxies = {
-        'http': proxy,
+        'http': proxies,
     }
 
     auth = None
