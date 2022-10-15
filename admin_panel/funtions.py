@@ -13,7 +13,6 @@ def change_proxy_ip(proxy: Proxy):
 
     proxies = {
         'http': proxy,
-        'https': proxy
     }
 
     auth = None
