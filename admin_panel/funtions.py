@@ -26,3 +26,4 @@ def change_proxy_ip(proxy: Proxy):
     time.sleep(proxy.reconnect_timeout)
     dialup.switch_network_mode(ctx, 3)
     print('connect')
+    api_user.logout(ctx)
