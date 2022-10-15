@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import *
 from . import scheduler
-from .funtions import change_proxy_ip
+from .funtions import change_proxy_ip, reboot_modem
 from threading import Thread
 import time
 from datetime import datetime
@@ -18,9 +18,12 @@ def reconnect_many(modeladmin, request, queryset):
 reconnect_many.short_description = 'Переподключить'
 
 def reboot_many(modeladmin, request, queryset):
-    pass
+    for proxy in queryset:
+        Thread(target=reboot_modem, args=(proxy,)).start()
+        time.sleep(0.01)
 
-reconnect_many.short_description = 'Перезагрузить'
+
+reboot_many.short_description = 'Перезагрузить'
 
 
 class ProxyAdmin(admin.ModelAdmin):
