@@ -70,10 +70,11 @@ def switch_network_mode(ctx, mode):
     }
 
     url = "{}/net/net-mode".format(ctx.api_base_url)
-    resp = common.get_from_url(url, data, ctx, additional_headers=headers)
+    resp = common.get_from_url(url, ctx, additional_headers=headers)
+    print(resp)
     NetworkBand = resp['response']['NetworkBand']
     LTEBand = resp['response']['LTEBand']
-    
+
     url = "{}/net/net-mode".format(ctx.api_base_url)
 
     data = XML_TEMPLATE_MODE.format(NetworkMode=mode, NetworkBand=NetworkBand, LTEBand=LTEBand)
