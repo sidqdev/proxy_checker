@@ -28,7 +28,7 @@ class Proxy(models.Model):
 
     last_ip_change_time = models.DateTimeField(default=datetime.now)
     ip_change_interval = models.SmallIntegerField(default=0)
-    
+    reconnect_timeout = models.SmallIntegerField(default=20)
     class Meta:
         verbose_name = 'прокси'
         verbose_name_plural = 'прокси'
