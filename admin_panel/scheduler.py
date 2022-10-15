@@ -17,6 +17,9 @@ from .huaweisms.api import device
 
 from datetime import datetime, timedelta
 from .funtions import change_proxy_ip
+import pytz
+utc=pytz.UTC
+
 
 
 def send_notification(proxy: Proxy, info=None, is_available=False, ip=''):
@@ -123,7 +126,7 @@ def change_proxies_ip():
         if proxy.ip_change_interval == 0:
             continue
             
-        if proxy.last_ip_change_time + timedelta(seconds=proxy.ip_change_interval) < datetime.now():
+        if utc.localize(proxy.last_ip_change_time + timedelta(seconds=proxy.ip_change_interval)) < utc.localize(datetime.now()):
             continue
         
         proxy.last_ip_change_time = datetime.now()
