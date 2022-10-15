@@ -16,7 +16,7 @@ from .huaweisms.api import user as api_user
 from .huaweisms.api import device
 
 from datetime import datetime, timedelta
-from .funtions import change_proxy_ip
+from .funtions import change_proxy_ip, reboot_modem
 import pytz
 utc=pytz.UTC
 
@@ -36,7 +36,7 @@ def send_notification(proxy: Proxy, info=None, is_available=False, ip=''):
     except Exception as e:
         print(e)
 
-def is_available_proxy(protocol: str, host: str, port: int, username: str = None, password : str = None) -> bool:
+def is_available_proxy(p: Proxy, protocol: str, host: str, port: int, username: str = None, password : str = None) -> bool:
     # if username:
     #     proxy = f'{protocol}://{username}:{password}@{host}:{port}'
     # else:
@@ -70,9 +70,7 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
 
         time.sleep(int(Settings.objects.get(id='recheck_sleep').value))
     try:
-        proxies_config = {'proxies': proxy, 'auth': (username, password)}
-        ctx = api_user.quick_login(os.getenv('modem_login'), os.getenv('modem_password'), modem_host="192.168.8.1", proxies_config=proxies_config)
-        device.reboot(ctx)
+        reboot_modem(p)
         time.sleep(80)
     except Exception as e:
         print('reboot', e)
@@ -95,7 +93,7 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
 
 
 def check_proxy(proxy: Proxy):
-    is_available, error, resp = is_available_proxy(proxy.protocol.id, proxy.host, proxy.port, proxy.username, proxy.password)
+    is_available, error, resp = is_available_proxy(proxy, proxy.protocol.id, proxy.host, proxy.port, proxy.username, proxy.password)
     print(is_available, error, resp)
     if not is_available:
         if proxy.is_available:
