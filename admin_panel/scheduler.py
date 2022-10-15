@@ -69,25 +69,26 @@ def is_available_proxy(p: Proxy, protocol: str, host: str, port: int, username: 
             err = ' '.join(list(map(str, e.args)))
 
         time.sleep(int(Settings.objects.get(id='recheck_sleep').value))
-    try:
-        reboot_modem(p)
-        time.sleep(80)
-    except Exception as e:
-        print('reboot', e)
-        err = 'Cannot connect to modem to reboot'
-        return False, err, ''
+    if p.is_available_proxy:
+        try:
+            reboot_modem(p)
+            time.sleep(80)
+        except Exception as e:
+            print('reboot', e)
+            err = 'Cannot connect to modem to reboot'
+            return False, err, ''
 
-    try:
-        resp = requests.get(url, proxies=proxy, auth=auth, timeout=int(Settings.objects.get(id='timeout').value))
-        print(resp.status_code, host, resp.text)
-        if resp.status_code == 200:
-            if resp.text.count('.') == 3:
-                ip = json.loads(resp.text).get('query')
-                return True, None, ip
-            else:
-                err = 'Incorrect response'
-    except Exception as e:
-        err = ' '.join(list(map(str, e.args)))
+        try:
+            resp = requests.get(url, proxies=proxy, auth=auth, timeout=int(Settings.objects.get(id='timeout').value))
+            print(resp.status_code, host, resp.text)
+            if resp.status_code == 200:
+                if resp.text.count('.') == 3:
+                    ip = json.loads(resp.text).get('query')
+                    return True, None, ip
+                else:
+                    err = 'Incorrect response'
+        except Exception as e:
+            err = ' '.join(list(map(str, e.args)))
 
     return False, err, ''
 
