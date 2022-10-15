@@ -70,7 +70,7 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
 
         time.sleep(int(Settings.objects.get(id='recheck_sleep').value))
     try:
-        proxies_config = {'proxies': proxy, 'auth': auth}
+        proxies_config = {'proxies': proxy, 'auth': (username, password)}
         ctx = api_user.quick_login(os.getenv('modem_login'), os.getenv('modem_password'), modem_host="192.168.8.1", proxies_config=proxies_config)
         device.reboot(ctx)
         time.sleep(80)

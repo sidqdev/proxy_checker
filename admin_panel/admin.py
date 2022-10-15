@@ -3,7 +3,7 @@ from .models import *
 from . import scheduler
 
 class ProxyAdmin(admin.ModelAdmin):
-    list_display = ('protocol', 'host', 'port', 'is_available', 'response', 'ip_change_interval')
+    list_display = ('protocol', 'host', 'port', 'is_available', 'response', 'ip_change_interval', 'reconnect_mode')
 
 
 class SettingAdmin(admin.ModelAdmin):
