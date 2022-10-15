@@ -9,7 +9,7 @@ from .huaweisms.api import dialup
 
 
 def change_proxy_ip(proxy: Proxy):
-    proxy = f'{proxy.protocol}://{proxy.host}:{proxy.port}'
+    proxies = f'{proxy.protocol}://{proxy.host}:{proxy.port}'
 
     proxies = {
         'http': proxy,
