@@ -18,7 +18,7 @@ def change_proxy_ip(proxy: Proxy):
 
     auth = None
     if proxy.username:
-        auth = HTTPProxyAuth(proxy.username, proxy.password)
+        auth = (proxy.username, proxy.password)
     
     proxies_config = {'proxies': proxies, 'auth': auth}
     ctx = api_user.quick_login(os.getenv('modem_login'), os.getenv('modem_password'), modem_host="192.168.8.1", proxies_config=proxies_config)
