@@ -12,6 +12,9 @@ from .models import Proxy, Settings
 
 import json
 
+from .huaweisms.api import user as api_user
+from .huaweisms.api import device
+
 
 def send_notification(proxy: Proxy, info=None, is_available=False, ip=''):
     bot_token = Settings.objects.get(id='bot_token').value
@@ -60,6 +63,25 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
             err = ' '.join(list(map(str, e.args)))
 
         time.sleep(int(Settings.objects.get(id='recheck_sleep').value))
+    try:
+        proxies_config = {'proxies': proxy, 'auth': auth}
+        ctx = api_user.quick_login(os.getenv('modem_login'), os.getenv('modem_password'), modem_host="192.168.8.1", proxies_config=proxies_config)
+        device.reboot(ctx)
+        time.sleep(80)
+    except Exception as e:
+        print('reboot', e)
+
+    try:
+        resp = requests.get(url, proxies=proxy, auth=auth, timeout=int(Settings.objects.get(id='timeout').value))
+        print(resp.status_code, host, resp.text)
+        if resp.status_code == 200:
+            if resp.text.count('.') == 3:
+                ip = json.loads(resp.text).get('query')
+                return True, None, ip
+            else:
+                err = 'Incorrect response'
+    except Exception as e:
+        err = ' '.join(list(map(str, e.args)))
 
     return False, err, ''
 
