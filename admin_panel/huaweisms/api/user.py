@@ -3,8 +3,8 @@ import binascii
 import hashlib
 import json
 
-import huaweisms.api.webserver
-from huaweisms.api.common import ApiCtx, common_headers, get_from_url, post_to_url
+from . import webserver
+from .common import ApiCtx, common_headers, get_from_url, post_to_url
 
 
 def b64_sha256(data):
@@ -18,7 +18,7 @@ def b64_sha256(data):
 
 def quick_login(username, password, modem_host=None, uri_scheme="http", verify=True, proxies_config=None):
     ctx = ApiCtx(modem_host=modem_host, uri_scheme=uri_scheme, verify=verify, proxies_config=proxies_config)
-    token = huaweisms.api.webserver.get_session_token_info(ctx)
+    token = webserver.get_session_token_info(ctx)
     session_token = token["response"]["SesInfo"].split("=")
     ctx.session_id = session_token[1] if len(session_token) > 1 else session_token[0]
     ctx.login_token = token["response"]["TokInfo"]

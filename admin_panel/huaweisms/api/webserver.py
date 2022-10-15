@@ -1,6 +1,6 @@
 import logging
 
-from huaweisms.api.common import ApiCtx, get_from_url
+from .common import ApiCtx, get_from_url
 
 
 logger = logging.getLogger(__name__)

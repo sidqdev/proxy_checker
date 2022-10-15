@@ -5,8 +5,8 @@ from xml.dom.minidom import Element
 import requests
 from requests.auth import HTTPProxyAuth
 
-from huaweisms.api.config import MODEM_HOST
-from huaweisms.xml.util import get_child_text, get_dictionary_from_children, parse_xml_string
+from .config import MODEM_HOST
+from ..xml.util import get_child_text, get_dictionary_from_children, parse_xml_string
 
 
 logger = logging.getLogger(__name__)

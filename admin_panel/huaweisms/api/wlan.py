@@ -1,15 +1,13 @@
-import huaweisms.api.common
-import huaweisms.xml.util
+from . import common
+from ..xml import util
 
 
 def get_connected_hosts(ctx):
-    # type: (huaweisms.api.common.ApiCtx) -> ...
     url = "{}/wlan/host-list".format(ctx.api_base_url)
-    return huaweisms.api.common.get_from_url(url, ctx)
+    return common.get_from_url(url, ctx)
 
 
 def block_host(ctx, mac_address, hostname=None):
-    # type: (huaweisms.api.common.ApiCtx, str, str) -> ...
     """
     Blocks/blacklists the given hosts.
 
@@ -37,17 +35,16 @@ def block_host(ctx, mac_address, hostname=None):
             "Failed to blacklist [{}], slots are full.".format(mac_address)
         )
 
-    payload = huaweisms.xml.util.dict_to_xml({"request": response})
+    payload = util.dict_to_xml({"request": response})
     headers = {
         "__RequestVerificationToken": ctx.token,
     }
-    return huaweisms.api.common.post_to_url(
+    return common.post_to_url(
         url, payload, ctx, additional_headers=headers
     )
 
 
 def unblock_host(ctx, mac_address):
-    # type: (huaweisms.api.common.ApiCtx, str) -> ...
     """
     Unblocks/un-blacklists the given hosts.
 
@@ -68,23 +65,21 @@ def unblock_host(ctx, mac_address):
                 ssid[host_key] = ""
                 ssid[mac_key] = ""
 
-    payload = huaweisms.xml.util.dict_to_xml({"request": response})
+    payload = util.dict_to_xml({"request": response})
     headers = {
         "__RequestVerificationToken": ctx.token,
     }
-    return huaweisms.api.common.post_to_url(
+    return common.post_to_url(
         url, payload, ctx, additional_headers=headers
     )
 
 
 def get_blocked_hosts(ctx):
-    # type: (huaweisms.api.common.ApiCtx) -> ...
     url = "{}/wlan/multi-macfilter-settings".format(ctx.api_base_url)
-    return huaweisms.api.common.get_from_url(url, ctx)
+    return common.get_from_url(url, ctx)
 
 
 def is_host_blocked(ctx, mac_address):
-    # type: (huaweisms.api.common.ApiCtx, str) -> bool
     response = get_blocked_hosts(ctx)
     if not response or response.get("type") != "response":
         raise ValueError(response)
@@ -121,7 +116,7 @@ def _switch_rf_radios(ctx, radio_1_enable, radio_2_enable):
     """.format(
         radio_1_enable=radio_1_enable, radio_2_enable=radio_2_enable
     )
-    return huaweisms.api.common.post_to_url(
+    return common.post_to_url(
         url, xml_data, ctx, additional_headers=headers
     )
 

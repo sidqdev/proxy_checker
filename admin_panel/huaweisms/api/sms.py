@@ -2,7 +2,7 @@ from datetime import datetime
 
 import six
 
-from huaweisms.api.common import ApiCtx, get_from_url, post_to_url
+from .common import ApiCtx, get_from_url, post_to_url
 
 
 def get_sms(ctx, box_type=1, page=1, qty=1, unread_preferred=True):
@@ -106,7 +106,6 @@ def sms_count(ctx):
 
 
 def sms_set_read(ctx, index):
-    # type: (ApiCtx) -> ...
 
     xml_data = """
         <?xml version:"1.0" encoding="UTF-8"?>
