@@ -4,10 +4,14 @@ from . import scheduler
 from .funtions import change_proxy_ip
 from threading import Thread
 import time
+from datetime import datetime
+
 
 def reconnect_many(modeladmin, request, queryset):
     for proxy in queryset:
         proxy: Proxy
+        proxy.last_ip_change_time = datetime.now()
+        proxy.save()
         Thread(target=change_proxy_ip, args=(proxy,)).start()
         time.sleep(0.01)
 
