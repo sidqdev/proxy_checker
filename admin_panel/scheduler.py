@@ -15,6 +15,9 @@ import json
 from .huaweisms.api import user as api_user
 from .huaweisms.api import device
 
+from datetime import datetime, timedelta
+from .funtions import change_proxy_ip
+
 
 def send_notification(proxy: Proxy, info=None, is_available=False, ip=''):
     bot_token = Settings.objects.get(id='bot_token').value
@@ -72,7 +75,7 @@ def is_available_proxy(protocol: str, host: str, port: int, username: str = None
         print('reboot', e)
         err = 'Cannot connect to modem to reboot'
         return False, err, ''
-        
+
     try:
         resp = requests.get(url, proxies=proxy, auth=auth, timeout=int(Settings.objects.get(id='timeout').value))
         print(resp.status_code, host, resp.text)
@@ -113,7 +116,21 @@ def check():
     for proxy in proxies:
         Thread(target=check_proxy, args=(proxy,)).start()
         time.sleep(0.05)
-    
+
+def change_proxies_ip():
+    proxies = Proxy.objects.all()
+    for proxy in proxies:
+        if proxy.ip_change_interval == 0:
+            continue
+            
+        if proxy.last_ip_change_time + timedelta(seconds=proxy.ip_change_interval) < datetime.now():
+            continue
+        
+        proxy.last_ip_change_time = datetime.now()
+        proxy.save()
+
+        Thread(target=change_proxy_ip, args=(proxy,)).start()
+
 
 scheduler = BackgroundScheduler()
 
@@ -127,6 +144,7 @@ if os.environ.get('status') == 'ok':
     except:
         pass
     job = scheduler.add_job(check, 'interval', seconds=int(sec))
+    scheduler.add_job(change_proxies_ip, 'interval', seconds=10)
     scheduler.start()
 else:
     os.environ.setdefault('status', 'ok')

@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 
 class Protocol(models.Model):
@@ -24,6 +25,10 @@ class Proxy(models.Model):
 
     is_available = models.BooleanField(default=False)
     response = models.CharField(max_length=32, null=True, blank=True, verbose_name='IP')
+
+    last_ip_change_time = models.DateTimeField(default=datetime.now)
+    ip_change_interval = models.SmallIntegerField(default=0)
+    
     class Meta:
         verbose_name = 'прокси'
         verbose_name_plural = 'прокси'
