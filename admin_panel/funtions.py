@@ -21,8 +21,8 @@ def change_proxy_ip(proxy: Proxy):
     
     proxies_config = {'proxies': proxies, 'auth': auth}
     ctx = api_user.quick_login(os.getenv('modem_login'), os.getenv('modem_password'), modem_host="192.168.8.1", proxies_config=proxies_config)
-    dialup.disconnect_mobile(ctx)
+    dialup.switch_network_mode(ctx, 1)
     print('disconnect')
     time.sleep(proxy.reconnect_timeout)
-    dialup.connect_mobile(ctx)
+    dialup.switch_network_mode(ctx, 3)
     print('connect')
