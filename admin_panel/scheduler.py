@@ -126,7 +126,7 @@ def change_proxies_ip():
         if proxy.ip_change_interval == 0:
             continue
             
-        if utc.localize(proxy.last_ip_change_time + timedelta(seconds=proxy.ip_change_interval)) < datetime.now():
+        if proxy.last_ip_change_time + timedelta(seconds=proxy.ip_change_interval) < utc.localize(datetime.now()):
             continue
         
         proxy.last_ip_change_time = datetime.now()
