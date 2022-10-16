@@ -6,8 +6,15 @@ from threading import Thread
 from datetime import datetime
 
 def change_proxy_ip_endpoint(request: HttpRequest):
-    id = int(request.GET.get('id'))
-    proxy = Proxy.objects.get(pk=id)
+    if request.GET.get('id'):
+        id = int(request.GET.get('id'))
+        proxy = Proxy.objects.get(pk=id)
+    elif request.GET.get('port'):
+        port = int(request.GET.get('port'))
+        proxy = Proxy.objects.get(port=port)
+    else:
+        return HttpResponse("no args")
+        
     proxy.last_ip_change_time = datetime.now()
     proxy.save()
     Thread(target=funtions.change_proxy_ip, args=(proxy,)).start()
