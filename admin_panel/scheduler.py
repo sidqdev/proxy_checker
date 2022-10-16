@@ -12,10 +12,7 @@ from .models import Proxy, Settings
 
 import json
 
-from .huaweisms.api import user as api_user
-from .huaweisms.api import device
-
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from .funtions import change_proxy_ip, reboot_modem
 import pytz
 utc=pytz.UTC
@@ -41,15 +38,17 @@ def is_available_proxy(p: Proxy, protocol: str, host: str, port: int, username: 
     #     proxy = f'{protocol}://{username}:{password}@{host}:{port}'
     # else:
     e = None
-    proxy = f'{protocol}://{host}:{port}'
-
+    if protocol == 'http' or not username:
+        proxy = f'{protocol}://{host}:{port}'
+    else:
+        proxy = f'{protocol}://{username}:{password}@{host}:{port}'
     proxy = {
         'http': proxy,
         'https': proxy
     }
 
     auth = None
-    if username:
+    if username and protocol == 'http':
         auth = HTTPProxyAuth(username, password)
 
     url = Settings.objects.get(id='check_url').value

@@ -9,17 +9,20 @@ from .huaweisms.api import dialup, device
 
 
 def change_proxy_ip(proxy: Proxy):
-    proxies = f'{proxy.protocol}://{proxy.host}:{proxy.port}'
-
+    if proxy.protocol == 'http' or not proxy.username:
+        proxies = f'{proxy.protocol}://{proxy.host}:{proxy.port}'
+    else:
+        proxies = f'{proxy.protocol}://{proxy.username}:{proxy.password}@{proxy.host}:{proxy.port}'
     proxies = {
         'http': proxies,
     }
 
     auth = None
-    if proxy.username:
+    if proxy.username and proxy.protocol == 'http':
         auth = (proxy.username, proxy.password)
     
     proxies_config = {'proxies': proxies, 'auth': auth}
+    
     ctx = api_user.quick_login(proxy.modem_username, proxy.modem_password, modem_host="192.168.8.1", proxies_config=proxies_config)
     modes = {
         '2g': 1,
@@ -50,14 +53,16 @@ def change_proxy_ip(proxy: Proxy):
 
 
 def reboot_modem(proxy: Proxy):
-    proxies = f'{proxy.protocol}://{proxy.host}:{proxy.port}'
-
+    if proxy.protocol == 'http' or not proxy.username:
+        proxies = f'{proxy.protocol}://{proxy.host}:{proxy.port}'
+    else:
+        proxies = f'{proxy.protocol}://{proxy.username}:{proxy.password}@{proxy.host}:{proxy.port}'
     proxies = {
         'http': proxies,
     }
 
     auth = None
-    if proxy.username:
+    if proxy.username and proxy.protocol == 'http':
         auth = (proxy.username, proxy.password)
     
     proxies_config = {'proxies': proxies, 'auth': auth}
