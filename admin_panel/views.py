@@ -17,5 +17,8 @@ def change_proxy_ip_endpoint(request: HttpRequest):
         
     proxy.last_ip_change_time = datetime.now()
     proxy.save()
-    Thread(target=funtions.change_proxy_ip, args=(proxy,)).start()
-    return HttpResponse("in process")
+    try:
+        funtions.change_proxy_ip(proxy)
+    except:
+        return HttpResponse("modem not available")
+    return HttpResponse("ip change success")
