@@ -69,7 +69,7 @@ def is_available_proxy(p: Proxy, protocol: str, host: str, port: int, username: 
             err = ' '.join(list(map(str, e.args)))
 
         time.sleep(int(Settings.objects.get(id='recheck_sleep').value))
-    if p.is_available_proxy:
+    if p.is_available:
         try:
             reboot_modem(p)
             time.sleep(80)
