@@ -17,6 +17,8 @@ def b64_sha256(data):
 
 
 def quick_login(username, password, modem_host=None, uri_scheme="http", verify=True, proxies_config=None):
+    username = username if username else ''
+    password = password if password else ''
     ctx = ApiCtx(modem_host=modem_host, uri_scheme=uri_scheme, verify=verify, proxies_config=proxies_config)
     token = webserver.get_session_token_info(ctx)
     session_token = token["response"]["SesInfo"].split("=")
