@@ -2,8 +2,19 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpRequest
 from .models import Proxy
 from . import funtions
-from threading import Thread
 from datetime import datetime
+from uuid import uuid4
+import json
+
+
+def get_ip_address(request):
+    user_ip_address = request.META.get('HTTP_X_FORWARDED_FOR')
+    if user_ip_address:
+        ip = user_ip_address.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
 
 def change_proxy_ip_endpoint(request: HttpRequest):
     if request.GET.get('id'):
@@ -22,3 +33,12 @@ def change_proxy_ip_endpoint(request: HttpRequest):
     except:
         return HttpResponse("modem not available")
     return HttpResponse("ip change success")
+
+
+def get_hard_ip(request: HttpRequest):
+    byte_count = int(request.GET.get('bytes', 32))
+    cnt = byte_count // 32 + 1
+    trash = ''.join([uuid4().hex for _ in range(cnt)])
+    ip = get_ip_address(request)
+    return HttpResponse(json.dumps(dict(query=ip, trash=trash)))
+    
