@@ -8,7 +8,7 @@ import json
 
 
 def get_ip_address(request):
-    user_ip_address = request.META.get('HTTP_X_FORWARDED_FOR')
+    user_ip_address = request.headers.get('HTTP_X_FORWARDED_FOR')
     if user_ip_address:
         ip = user_ip_address.split(',')[0]
     else:
