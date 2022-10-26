@@ -28,8 +28,9 @@ reboot_many.short_description = 'Перезагрузить'
 
 class ProxyAdmin(admin.ModelAdmin):
     # list_display = ('protocol', 'host', 'port', 'is_available', 'response', 'ip_change_interval', 'reconnect_mode')
-    list_display = ('ip', 'port', 'phone_number', 'is_available', 'response')
+    # list_display = ('ip', 'port', 'info', 'is_available', 'response')
     actions = (reconnect_many, reboot_many)
+    # list_display_links = []
 
     def get_queryset(self, request):
         qs = super(ProxyAdmin, self).get_queryset(request)
@@ -38,6 +39,17 @@ class ProxyAdmin(admin.ModelAdmin):
             return qs
 
         return qs.filter(owner=request.user)
+
+    def get_list_display_links(self, request):
+        if request.user.is_superuser:
+            return super(ProxyAdmin, self).get_list_display_links(request)
+        return []
+    
+    def get_list_display(self, request):
+        if request.user.is_superuser:
+            return ('ip', 'port', 'info', 'is_available', 'response')
+
+        return ('protocol', 'host', 'port', 'is_available', 'response', 'ip_change_interval', 'reconnect_mode')
 
 
 class SettingAdmin(admin.ModelAdmin):

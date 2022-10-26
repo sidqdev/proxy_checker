@@ -22,7 +22,6 @@ class Proxy(models.Model):
     port = models.SmallIntegerField()
 
     ip = models.CharField(max_length=256, null=True, blank=True)
-    phone_number = models.CharField(max_length=256, null=True, blank=True)
 
     username = models.CharField(max_length=256, null=True, blank=True)
     password = models.CharField(max_length=256, null=True, blank=True)
