@@ -27,8 +27,8 @@ SECRET_KEY = '5l9#n8!!o*h^+-c@qjuvx3(al9$unqie^rd5n+-zzb(y%$!a$&'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['https://*', 'http://*', 'http://*:*']
-
+CSRF_TRUSTED_ORIGINS = ['https://*', 'http://*']
+CORS_ALLOWED_ORIGINS = ['https://*', 'http://*']
 
 # Application definition
 
