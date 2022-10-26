@@ -16,26 +16,26 @@ class Protocol(models.Model):
 
         
 class Proxy(models.Model):
-    info = models.TextField(default='')
-    protocol = models.ForeignKey(to=Protocol, on_delete=models.CASCADE)
-    host = models.CharField(max_length=50)
-    port = models.SmallIntegerField()
+    info = models.TextField(default='', verbose_name='информация')
+    protocol = models.ForeignKey(to=Protocol, on_delete=models.CASCADE, verbose_name='протокол')
+    host = models.CharField(max_length=50, verbose_name='хост')
+    port = models.SmallIntegerField(verbose_name='порт')
 
-    ip = models.CharField(max_length=256, null=True, blank=True)
+    ip = models.CharField(max_length=256, null=True, blank=True, verbose_name='сервер')
 
-    username = models.CharField(max_length=256, null=True, blank=True)
-    password = models.CharField(max_length=256, null=True, blank=True)
+    username = models.CharField(max_length=256, null=True, blank=True, verbose_name='логин прокси')
+    password = models.CharField(max_length=256, null=True, blank=True, verbose_name='пароль прокси')
 
-    is_available = models.BooleanField(default=False)
-    response = models.CharField(max_length=32, null=True, blank=True, verbose_name='IP')
+    is_available = models.BooleanField(default=False, verbose_name='доступна?')
+    response = models.CharField(max_length=32, null=True, blank=True, verbose_name='IP из ответа')
 
-    modem_username = models.CharField(max_length=256, null=True, blank=True)
-    modem_password = models.CharField(max_length=256, null=True, blank=True)
+    modem_username = models.CharField(max_length=256, null=True, blank=True, verbose_name='логин модема')
+    modem_password = models.CharField(max_length=256, null=True, blank=True, verbose_name='пароль модема')
 
-    last_ip_change_time = models.DateTimeField(default=datetime.now)
-    ip_change_interval = models.SmallIntegerField(default=0)
-    reconnect_mode = models.CharField(max_length=256, null=True, blank=True)
-    owner = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, blank=True)
+    last_ip_change_time = models.DateTimeField(default=datetime.now, verbose_name='последнее изменение айпи')
+    ip_change_interval = models.SmallIntegerField(default=0, verbose_name='интервал смены айпи')
+    reconnect_mode = models.CharField(max_length=256, null=True, blank=True, verbose_name='режим переключения')
+    owner = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='владелец')
     class Meta:
         verbose_name = 'прокси'
         verbose_name_plural = 'прокси'
