@@ -124,5 +124,5 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/home/botusr/proxy_checker/static'
-MEDIA_ROOT = '/home/botusr/proxy_checker/media'
+STATIC_ROOT = '/usr/share/proxy_checker/static'
+MEDIA_ROOT = '/usr/share/proxy_checker/media'
