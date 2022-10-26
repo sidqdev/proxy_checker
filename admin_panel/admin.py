@@ -40,9 +40,9 @@ class ProxyAdmin(admin.ModelAdmin):
 
         return qs.filter(owner=request.user)
 
-    def get_list_display_links(self, request):
+    def get_list_display_links(self, request, list_display):
         if request.user.is_superuser:
-            return super(ProxyAdmin, self).get_list_display_links(request)
+            return super(ProxyAdmin, self).get_list_display_links(request, list_display)
         return []
     
     def get_list_display(self, request):
