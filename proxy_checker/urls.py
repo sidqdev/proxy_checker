@@ -19,5 +19,6 @@ from admin_panel import urls as api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('users/', admin.site.urls),
     path('api/', include(api)),
 ]
