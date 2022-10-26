@@ -26,9 +26,14 @@ SECRET_KEY = '5l9#n8!!o*h^+-c@qjuvx3(al9$unqie^rd5n+-zzb(y%$!a$&'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ['http://*']
-CORS_ALLOWED_ORIGINS = ['http://*']
+ALLOWED_HOSTS = ['*', 'http://159.69.61.182:61507']
+CSRF_TRUSTED_ORIGINS = ['http://*', 'http://159.69.61.182:61507']
+CORS_ALLOWED_ORIGINS = [
+    'http://*',
+    'http://0.0.0.0:7000',
+    'http://159.69.61.182:61507'
+
+]
 
 
 # Application definition
