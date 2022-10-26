@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime
+from django.contrib.auth.models import User
 
 
 class Protocol(models.Model):
@@ -32,6 +33,7 @@ class Proxy(models.Model):
     last_ip_change_time = models.DateTimeField(default=datetime.now)
     ip_change_interval = models.SmallIntegerField(default=0)
     reconnect_mode = models.CharField(max_length=256, null=True, blank=True)
+    owner = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, blank=True)
     class Meta:
         verbose_name = 'прокси'
         verbose_name_plural = 'прокси'

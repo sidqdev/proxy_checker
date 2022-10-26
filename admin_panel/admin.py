@@ -30,6 +30,15 @@ class ProxyAdmin(admin.ModelAdmin):
     list_display = ('protocol', 'host', 'port', 'is_available', 'response', 'ip_change_interval', 'reconnect_mode')
     actions = (reconnect_many, reboot_many)
 
+    def get_queryset(self, request):
+        qs = super(ProxyAdmin, self).get_queryset(request)
+
+        if request.user.is_superuser:
+            return qs
+
+        return qs.filter(owner=request.user)
+
+
 class SettingAdmin(admin.ModelAdmin):
     list_display = ('id', 'value', 'description')
 
