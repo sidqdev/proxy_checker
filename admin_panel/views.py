@@ -13,7 +13,7 @@ def get_ip_address(request):
     if user_ip_address:
         ip = user_ip_address.split(',')[0]
     else:
-        ip = request.META.get('REMOTE_ADDR')
+        ip = request.META.get('X-Real-IP')
     return ip
 
 
