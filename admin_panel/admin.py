@@ -27,7 +27,8 @@ reboot_many.short_description = 'Перезагрузить'
 
 
 class ProxyAdmin(admin.ModelAdmin):
-    list_display = ('protocol', 'host', 'port', 'is_available', 'response', 'ip_change_interval', 'reconnect_mode')
+    # list_display = ('protocol', 'host', 'port', 'is_available', 'response', 'ip_change_interval', 'reconnect_mode')
+    list_display = ('ip', 'port', 'phone_number', 'is_available', 'response')
     actions = (reconnect_many, reboot_many)
 
     def get_queryset(self, request):
