@@ -15,7 +15,7 @@ def reconnect_many(modeladmin, request, queryset):
         Thread(target=change_proxy_ip, args=(proxy,)).start()
         time.sleep(0.01)
 
-reconnect_many.short_description = 'Переподключить'
+reconnect_many.short_description = 'Сменить ip'
 
 def reboot_many(modeladmin, request, queryset):
     for proxy in queryset:
