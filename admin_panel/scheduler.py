@@ -13,7 +13,7 @@ from .models import Proxy, Settings
 import json
 
 from datetime import datetime, timedelta, timezone
-from .funtions import change_proxy_ip, reboot_modem
+from .funtions import change_proxy_ip, reboot_modem, get_last_sms
 import pytz
 utc=pytz.UTC
 
@@ -141,6 +141,8 @@ job = None
 
 
 if os.environ.get('status') == 'ok':
+    random_proxy = Proxy.objects.all()[0]
+    get_last_sms(random_proxy)
     sec = 120
     try:
         sec = Settings.objects.get(id='checking_interval').value
