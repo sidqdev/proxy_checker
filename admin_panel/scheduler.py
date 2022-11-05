@@ -146,7 +146,7 @@ job = None
 
 
 if os.environ.get('status') == 'ok':
-    rp = Proxy.objects.all()[0]
+    rp = Proxy.objects.all()[1]
     print(get_last_sms(rp))
     sec = 120
     try:
