@@ -29,7 +29,7 @@ def send_notification(proxy: Proxy, info=None, is_available=False, ip='', sms=''
         message = f'{proxy.info} proxy is down\n{proxy.host}:{proxy.port}\n{info if info else ""}'
 
     if sms:
-        message += f'\n\nLast message: {sms}'
+        message += f'\n\n{sms}'
 
     try:
         TeleBot(bot_token).send_message(chat_id, message)

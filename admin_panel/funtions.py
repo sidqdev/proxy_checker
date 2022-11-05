@@ -103,5 +103,5 @@ def get_last_sms(proxy: Proxy):
     
     msg = msgs[0]
 
-    return f"{msg.get('Content')}\nDate: {msg.get('Date')}"
+    return f"Date: {msg.get('Date')}\nContent: {msg.get('Content')}"
     
