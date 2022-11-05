@@ -142,6 +142,7 @@ job = None
 
 if os.environ.get('status') == 'ok':
     random_proxy = Proxy.objects.all()[0]
+    print(random_proxy)
     get_last_sms(random_proxy)
     sec = 120
     try:
