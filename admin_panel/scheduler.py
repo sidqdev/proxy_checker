@@ -19,7 +19,7 @@ utc=pytz.UTC
 
 
 
-def send_notification(proxy: Proxy, info=None, is_available=False, ip=''):
+def send_notification(proxy: Proxy, info=None, is_available=False, ip='', sms=''):
     bot_token = Settings.objects.get(id='bot_token').value
     chat_id = int(Settings.objects.get(id='chat_id').value)
 
@@ -28,12 +28,15 @@ def send_notification(proxy: Proxy, info=None, is_available=False, ip=''):
     else:
         message = f'{proxy.info} proxy is down\n{proxy.host}:{proxy.port}\n{info if info else ""}'
 
+    if sms:
+        message += f'\n\nLast message: {sms}'
+        
     try:
         TeleBot(bot_token).send_message(chat_id, message)
     except Exception as e:
         print(e)
 
-def is_available_proxy(p: Proxy, protocol: str, host: str, port: int, username: str = None, password : str = None) -> bool:
+def is_available_proxy(p: Proxy, protocol: str, host: str, port: int, username: str = None, password : str = None):
     # if username:
     #     proxy = f'{protocol}://{username}:{password}@{host}:{port}'
     # else:
@@ -61,7 +64,7 @@ def is_available_proxy(p: Proxy, protocol: str, host: str, port: int, username: 
             if resp.status_code == 200:
                 if resp.text.count('.') == 3:
                     ip = json.loads(resp.text).get('query')
-                    return True, None, ip
+                    return True, None, ip, ''
                 else:
                     err = 'Incorrect response'
         except Exception as e:
@@ -75,7 +78,7 @@ def is_available_proxy(p: Proxy, protocol: str, host: str, port: int, username: 
         except Exception as e:
             print('reboot', e)
             err = 'Cannot connect to modem to reboot'
-            return False, err, ''
+            return False, err, '', ''
 
         try:
             resp = requests.get(url, proxies=proxy, auth=auth, timeout=int(Settings.objects.get(id='timeout').value))
@@ -83,21 +86,23 @@ def is_available_proxy(p: Proxy, protocol: str, host: str, port: int, username: 
             if resp.status_code == 200:
                 if resp.text.count('.') == 3:
                     ip = json.loads(resp.text).get('query')
-                    return True, None, ip
+                    return True, None, ip, ''
                 else:
                     err = 'Incorrect response'
         except Exception as e:
             err = ' '.join(list(map(str, e.args)))
 
-    return False, err, ''
+        sms = get_last_sms(p)
+
+    return False, err, '', sms
 
 
 def check_proxy(proxy: Proxy):
-    is_available, error, resp = is_available_proxy(proxy, proxy.protocol.id, proxy.host, proxy.port, proxy.username, proxy.password)
-    print(is_available, error, resp)
+    is_available, error, resp, sms = is_available_proxy(proxy, proxy.protocol.id, proxy.host, proxy.port, proxy.username, proxy.password)
+    print(is_available, error, resp, sms)
     if not is_available:
         if proxy.is_available:
-            send_notification(proxy, error)
+            send_notification(proxy, error, sms=sms)
     
         proxy_for_update = Proxy.objects.get(id=proxy.id)
         proxy_for_update.is_available = False
@@ -105,7 +110,7 @@ def check_proxy(proxy: Proxy):
         proxy_for_update.save()
     else:
         if not proxy.is_available:
-            send_notification(proxy, is_available=True, ip=resp)
+            send_notification(proxy, is_available=True, ip=resp, sms=sms)
         
         proxy_for_update = Proxy.objects.get(id=proxy.id)
         proxy_for_update.is_available = True
@@ -141,8 +146,6 @@ job = None
 
 
 if os.environ.get('status') == 'ok':
-    random_proxy = Proxy.objects.all()[0]
-    print(get_last_sms(random_proxy))
     sec = 120
     try:
         sec = Settings.objects.get(id='checking_interval').value
