@@ -57,6 +57,7 @@ def is_available_proxy(p: Proxy, protocol: str, host: str, port: int, username: 
     url = Settings.objects.get(id='check_url').value
 
     err = 'Bad status code'
+    sms = ''
     for _ in range(int(Settings.objects.get(id='recheck_count').value)):
         try:
             resp = requests.get(url, proxies=proxy, auth=auth, timeout=int(Settings.objects.get(id='timeout').value))
