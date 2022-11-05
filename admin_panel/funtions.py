@@ -86,7 +86,6 @@ def get_last_sms(proxy: Proxy):
     proxies_config = {'proxies': proxies, 'auth': auth}
     ctx = api_user.quick_login(proxy.modem_username, proxy.modem_password, modem_host="192.168.8.1", proxies_config=proxies_config)
     sms_ = sms.get_sms(ctx)
-    print(sms_)
     if not sms_:
         return ''
     
@@ -104,5 +103,5 @@ def get_last_sms(proxy: Proxy):
     
     msg = msgs[0]
 
-    return msg.get('Content')
+    return f"{msg.get('Content')}\nDate: {msg.get('Date')}"
     
