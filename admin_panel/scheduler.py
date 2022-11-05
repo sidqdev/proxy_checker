@@ -30,7 +30,7 @@ def send_notification(proxy: Proxy, info=None, is_available=False, ip='', sms=''
 
     if sms:
         message += f'\n\nLast message: {sms}'
-        
+
     try:
         TeleBot(bot_token).send_message(chat_id, message)
     except Exception as e:
@@ -146,6 +146,8 @@ job = None
 
 
 if os.environ.get('status') == 'ok':
+    rp = Proxy.objects.all()[0]
+    print(get_last_sms(rp))
     sec = 120
     try:
         sec = Settings.objects.get(id='checking_interval').value
