@@ -153,8 +153,8 @@ job = None
 
 
 if os.environ.get('status') == 'ok':
-    rp = Proxy.objects.get(pk=19)
-    print(get_last_sms(rp))
+    # rp = Proxy.objects.get(pk=19)
+    # print(get_last_sms(rp))
     sec = 120
     try:
         sec = Settings.objects.get(id='checking_interval').value
