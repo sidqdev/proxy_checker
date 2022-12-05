@@ -122,7 +122,7 @@ def check():
     proxies = Proxy.objects.all()
     for proxy in proxies:
         proxy: Proxy
-        if proxy.is_ignored:
+        if not proxy.monitoring:
             continue
 
         Thread(target=check_proxy, args=(proxy,)).start()
@@ -131,7 +131,7 @@ def check():
 def change_proxies_ip():
     proxies = Proxy.objects.all()
     for proxy in proxies:
-        if proxy.is_ignored:
+        if not proxy.monitoring:
             continue
         if proxy.ip_change_interval == 0:
             continue
