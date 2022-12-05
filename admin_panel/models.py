@@ -36,6 +36,8 @@ class Proxy(models.Model):
     ip_change_interval = models.SmallIntegerField(default=0, verbose_name='интервал смены айпи')
     reconnect_mode = models.CharField(max_length=256, null=True, blank=True, verbose_name='режим переключения')
     owner = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='владелец')
+
+    is_ignored = models.BooleanField(default=False, verbose_name="игнорировать проверку?")
     class Meta:
         verbose_name = 'прокси'
         verbose_name_plural = 'прокси'

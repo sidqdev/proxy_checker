@@ -121,12 +121,18 @@ def check_proxy(proxy: Proxy):
 def check():
     proxies = Proxy.objects.all()
     for proxy in proxies:
+        proxy: Proxy
+        if proxy.is_ignored:
+            continue
+
         Thread(target=check_proxy, args=(proxy,)).start()
         time.sleep(0.05)
 
 def change_proxies_ip():
     proxies = Proxy.objects.all()
     for proxy in proxies:
+        if proxy.is_ignored:
+            continue
         if proxy.ip_change_interval == 0:
             continue
 
