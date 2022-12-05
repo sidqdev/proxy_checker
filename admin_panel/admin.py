@@ -47,9 +47,9 @@ class ProxyAdmin(admin.ModelAdmin):
     
     def get_list_display(self, request):
         if request.user.is_superuser:
-            return ('protocol', 'host', 'port', 'is_available', 'response', 'ip_change_interval', 'reconnect_mode', 'is_ignored')
+            return ('protocol', 'host', 'port', 'is_available', 'response', 'ip_change_interval', 'reconnect_mode', 'monitoring')
 
-        return ('ip', 'port', 'info', 'is_available', 'response', 'is_ignored')
+        return ('ip', 'port', 'info', 'is_available', 'response', 'monitoring')
 
 
 class SettingAdmin(admin.ModelAdmin):
