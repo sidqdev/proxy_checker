@@ -4,7 +4,32 @@ from . import scheduler
 from .funtions import change_proxy_ip, reboot_modem
 from threading import Thread
 import time
-from datetime import datetime
+from datetime import datetime, timedelta
+
+
+def ssh_update(modeladmin, request, queryset):
+    for proxy in queryset:
+        Thread(target=scheduler.ssh_connect, args=(proxy,)).start()
+        proxy.ssh_last_execute = datetime.now()
+        proxy.save()
+        time.sleep(0.1)
+
+
+ssh_update.short_description = 'Обновить ssh'
+
+
+def monitor(modeladmin, request, queryset):
+    queryset.update(monitoring=True)
+
+
+monitor.short_description = 'Мониторить'
+
+
+def unmonitor(modeladmin, request, queryset):
+    queryset.update(monitoring=False)
+
+
+unmonitor.short_description = 'Перестать мониторить'
 
 
 def reconnect_many(modeladmin, request, queryset):
@@ -29,7 +54,7 @@ reboot_many.short_description = 'Перезагрузить'
 class ProxyAdmin(admin.ModelAdmin):
     # list_display = ('protocol', 'host', 'port', 'is_available', 'response', 'ip_change_interval', 'reconnect_mode')
     # list_display = ('ip', 'port', 'info', 'is_available', 'response')
-    actions = (reconnect_many, reboot_many)
+    actions = (reconnect_many, reboot_many, monitor, unmonitor, ssh_update)
     # list_display_links = []
 
     def get_queryset(self, request):

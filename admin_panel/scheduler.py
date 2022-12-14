@@ -15,8 +15,10 @@ import json
 from datetime import datetime, timedelta, timezone
 from .funtions import change_proxy_ip, reboot_modem, get_last_sms
 import pytz
-utc=pytz.UTC
+from paramiko import SSHClient
 
+
+utc=pytz.UTC
 
 
 def send_notification(proxy: Proxy, info=None, is_available=False, ip='', sms=''):
@@ -35,6 +37,7 @@ def send_notification(proxy: Proxy, info=None, is_available=False, ip='', sms=''
         TeleBot(bot_token).send_message(chat_id, message)
     except Exception as e:
         print(e)
+
 
 def is_available_proxy(p: Proxy, protocol: str, host: str, port: int, username: str = None, password : str = None):
     # if username:
@@ -98,6 +101,17 @@ def is_available_proxy(p: Proxy, protocol: str, host: str, port: int, username: 
     return False, err, '', sms
 
 
+def check():
+    proxies = Proxy.objects.all()
+    for proxy in proxies:
+        proxy: Proxy
+        if not proxy.monitoring:
+            continue
+
+        Thread(target=check_proxy, args=(proxy,)).start()
+        time.sleep(0.05)
+
+
 def check_proxy(proxy: Proxy):
     is_available, error, resp, sms = is_available_proxy(proxy, proxy.protocol.id, proxy.host, proxy.port, proxy.username, proxy.password)
     print(is_available, error, resp, sms)
@@ -118,15 +132,24 @@ def check_proxy(proxy: Proxy):
         proxy_for_update.response = resp
         proxy_for_update.save(force_update=True)
 
-def check():
-    proxies = Proxy.objects.all()
-    for proxy in proxies:
-        proxy: Proxy
-        if not proxy.monitoring:
-            continue
 
-        Thread(target=check_proxy, args=(proxy,)).start()
-        time.sleep(0.05)
+def check_proxy_ssh():
+    for proxy in Proxy.objects.all():
+        if proxy.ssh_last_execute + timedelta(minutes=proxy.ssh_execute_interval) > datetime.now() and \
+        proxy.ssh_execute_interval:
+            continue
+        Thread(target=ssh_connect, args=(proxy,)).start()
+        proxy.ssh_last_execute = datetime.now()
+        proxy.save()
+        time.sleep(0.1)
+
+
+def ssh_connect(proxy: Proxy):
+    client = SSHClient()
+    client.connect(proxy.ssh_host, proxy.ssh_port, proxy.ssh_user, proxy.ssh_password)
+    client.exec_command(proxy.ssh_command)
+    client.close()
+
 
 def change_proxies_ip():
     proxies = Proxy.objects.all()
@@ -162,6 +185,7 @@ if os.environ.get('status') == 'ok':
         pass
     job = scheduler.add_job(check, 'interval', seconds=int(sec))
     scheduler.add_job(change_proxies_ip, 'interval', seconds=10)
+    scheduler.add_job(check_proxy_ssh, 'interval', seconds=30)
     scheduler.start()
 else:
     os.environ.setdefault('status', 'ok')

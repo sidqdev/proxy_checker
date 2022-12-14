@@ -2,6 +2,8 @@ from django.db import models
 from datetime import datetime
 from django.contrib.auth.models import User
 
+nl_bl = {'null': True, 'blank': True}
+
 
 class Protocol(models.Model):
     id = models.CharField(max_length=30, primary_key=True)
@@ -38,6 +40,18 @@ class Proxy(models.Model):
     owner = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, blank=True, verbose_name='владелец')
 
     monitoring = models.BooleanField(default=True, verbose_name="мониторинг")
+
+    ssh_host = models.CharField(max_length=50, **nl_bl, verbose_name='ssh хост')
+    ssh_port = models.SmallIntegerField(**nl_bl, verbose_name='ssh порт')
+    ssh_user = models.CharField(max_length=50, **nl_bl, verbose_name='ssh пользователь')
+    ssh_password = models.CharField(max_length=50, **nl_bl, verbose_name='ssh пароль')
+
+    ssh_command = models.CharField(max_length=256, **nl_bl, verbose_name='ssh команда')
+
+    ssh_last_execute =  models.DateTimeField(default=datetime.now, verbose_name='последнее обновление ssh')
+    ssh_execute_interval = models.SmallIntegerField(default=0, **nl_bl, verbose_name='интервал обновления')
+
+
     class Meta:
         verbose_name = 'прокси'
         verbose_name_plural = 'прокси'
