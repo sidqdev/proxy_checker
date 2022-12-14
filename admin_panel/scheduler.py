@@ -15,7 +15,7 @@ import json
 from datetime import datetime, timedelta, timezone
 from .funtions import change_proxy_ip, reboot_modem, get_last_sms
 import pytz
-from paramiko import SSHClient
+from paramiko import SSHClient, AutoAddPolicy
 
 
 utc=pytz.UTC
@@ -146,6 +146,7 @@ def check_proxy_ssh():
 
 def ssh_connect(proxy: Proxy):
     client = SSHClient()
+    client.set_missing_host_key_policy(AutoAddPolicy())
     client.connect(proxy.ssh_host, proxy.ssh_port, proxy.ssh_user, proxy.ssh_password)
     client.exec_command(proxy.ssh_command)
     client.close()

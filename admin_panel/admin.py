@@ -15,21 +15,21 @@ def ssh_update(modeladmin, request, queryset):
         time.sleep(0.1)
 
 
-ssh_update.short_description = 'Обновить ssh'
+ssh_update.short_description = 'Выполнить команду по ssh'
 
 
 def monitor(modeladmin, request, queryset):
     queryset.update(monitoring=True)
 
 
-monitor.short_description = 'Мониторить'
+monitor.short_description = 'Включить мониторинг'
 
 
 def unmonitor(modeladmin, request, queryset):
     queryset.update(monitoring=False)
 
 
-unmonitor.short_description = 'Перестать мониторить'
+unmonitor.short_description = 'Выключить мониторинг'
 
 
 def reconnect_many(modeladmin, request, queryset):
@@ -48,7 +48,7 @@ def reboot_many(modeladmin, request, queryset):
         time.sleep(0.01)
 
 
-reboot_many.short_description = 'Перезагрузить'
+reboot_many.short_description = 'Перезагрузить модем'
 
 
 class ProxyAdmin(admin.ModelAdmin):
