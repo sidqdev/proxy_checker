@@ -136,7 +136,7 @@ def check_proxy(proxy: Proxy):
 def check_proxy_ssh():
     for proxy in Proxy.objects.all():
         if proxy.ssh_last_execute + timedelta(minutes=proxy.ssh_execute_interval) > datetime.now() or \
-        proxy.ssh_execute_interval:
+        proxy.ssh_execute_interval == 0:
             continue
         Thread(target=ssh_connect, args=(proxy,)).start()
         proxy.ssh_last_execute = datetime.now()
