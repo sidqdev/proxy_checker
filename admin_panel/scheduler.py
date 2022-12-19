@@ -52,8 +52,8 @@ def send_pay_notification(proxy: Proxy):
 
 def pay_notification_checker():
     for proxy in Proxy.objects.all():
-        if proxy.last_pay + timedelta(proxy.allert_interval_days) <= datetime.date(datetime.now()):
-            send_pay_notification(proxy)
+        if proxy.last_pay + timedelta(proxy.allert_interval_days) <= datetime.date(datetime.now()) and proxy.user_id:
+            Thread(target=send_pay_notification, args=(proxy,)).start()
             time.sleep(0.05)
         
         if proxy.last_pay + timedelta(proxy.pay_days_interval) <= datetime.date(datetime.now()):
