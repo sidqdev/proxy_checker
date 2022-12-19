@@ -40,13 +40,12 @@ def send_notification(proxy: Proxy, info=None, is_available=False, ip='', sms=''
 
 
 def send_pay_notification(proxy: Proxy):
-    bot_token = Settings.objects.get(id='bot_token').value
-    chat_id = int(Settings.objects.get(id='chat_id').value)
+    bot_token =  Settings.objects.get(id='bot_token').value
 
     message = str(proxy.info)
 
     try:
-        TeleBot(bot_token).send_message(chat_id, message)
+        TeleBot(bot_token).send_message(proxy.user_id, message)
     except Exception as e:
         print(e)
 
@@ -55,12 +54,11 @@ def pay_notification_checker():
     for proxy in Proxy.objects.all():
         if proxy.last_pay + timedelta(proxy.allert_interval_days) <= datetime.date(datetime.now()):
             send_pay_notification(proxy)
+            time.sleep(0.05)
         
         if proxy.last_pay + timedelta(proxy.pay_days_interval) <= datetime.date(datetime.now()):
             proxy.last_pay = datetime.now()
             proxy.save()
-        
-        time.sleep(0.05)
 
 
 
@@ -210,7 +208,7 @@ if os.environ.get('status') == 'ok':
     except:
         pass
     job = scheduler.add_job(check, 'interval', seconds=int(sec))
-    scheduler.add_job(pay_notification_checker, 'interval', seconds=19)
+    scheduler.add_job(pay_notification_checker, 'cron', hour=11, minute=0, second=0)
     scheduler.add_job(change_proxies_ip, 'interval', seconds=10)
     scheduler.add_job(check_proxy_ssh, 'interval', seconds=30)
     scheduler.start()

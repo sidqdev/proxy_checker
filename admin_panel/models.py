@@ -43,7 +43,6 @@ class Proxy(models.Model):
 
     username = models.CharField(default=get_default('username', str), max_length=256, **nl_bl, verbose_name='логин прокси')
     password = models.CharField(default=get_default('password', str), max_length=256, **nl_bl, verbose_name='пароль прокси')
-    user_id = models.BigIntegerField(default=get_default('user_id', int), verbose_name='id пользователя')
 
     is_available = models.BooleanField(default=False, verbose_name='доступна?')
     response = models.CharField(max_length=32, **nl_bl, verbose_name='IP из ответа')
@@ -69,6 +68,7 @@ class Proxy(models.Model):
     last_pay = models.DateField(default=datetime.now(), **nl_bl, verbose_name='постледняя дата оплаты')
     pay_days_interval = models.SmallIntegerField(default=30, **nl_bl, verbose_name='интервал оплаты (дни)')
     allert_interval_days = models.SmallIntegerField(default=get_default('allert_interval', int), max_length=256, **nl_bl, verbose_name='интервал оповещения (дни)')
+    user_id = models.BigIntegerField(default=get_default('user_id', int), verbose_name='id пользователя')
 
 
     class Meta:
