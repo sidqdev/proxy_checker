@@ -66,7 +66,7 @@ class Proxy(models.Model):
     ssh_execute_interval = models.SmallIntegerField(default=0, **nl_bl, verbose_name='интервал обновления')
 
     last_pay = models.DateField(default=datetime.now(), **nl_bl, verbose_name='постледняя дата оплаты')
-    pay_days_interval = models.SmallIntegerField(default=30, **nl_bl, verbose_name='интервал оплаты (дни)')
+    pay_days_interval = models.SmallIntegerField(default=get_default('pay_interval', int), **nl_bl, verbose_name='интервал оплаты (дни)')
     allert_interval_days = models.SmallIntegerField(default=get_default('allert_interval', int), max_length=256, **nl_bl, verbose_name='интервал оповещения (дни)')
     user_id = models.BigIntegerField(default=get_default('user_id', int), verbose_name='id пользователя', **nl_bl)
 
