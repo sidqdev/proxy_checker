@@ -53,10 +53,6 @@ def send_pay_notification(proxy: Proxy):
 def pay_notification_checker():
     for proxy in Proxy.objects.all():
         try:
-            print("loop")
-            print(proxy.last_pay + timedelta(days=proxy.pay_days_interval))
-            print(date.today())
-
             if proxy.last_pay + timedelta(days=proxy.alert_interval_days) == date.today() and \
             proxy.user_id and \
             proxy.notifying:
@@ -69,7 +65,7 @@ def pay_notification_checker():
                 proxy.last_pay = date.today()
                 proxy.save()
         except Exception as e:
-            print("err", e)
+            pass
 
 
 
@@ -219,7 +215,7 @@ if os.environ.get('status') == 'ok':
     except:
         pass
     job = scheduler.add_job(check, 'interval', seconds=int(sec))
-    scheduler.add_job(pay_notification_checker, 'cron', hour=0, minute=16, second=0)
+    scheduler.add_job(pay_notification_checker, 'cron', hour=0, minute=18, second=0)
     scheduler.add_job(change_proxies_ip, 'interval', seconds=10)
     scheduler.add_job(check_proxy_ssh, 'interval', seconds=30)
     scheduler.start()
