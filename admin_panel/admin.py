@@ -11,14 +11,14 @@ def notify(modeladmin, request, queryset):
     queryset.update(notifying=True)
 
 
-notify.short_description = 'уведомлять'
+notify.short_description = 'Вкл уведомление об оплате'
 
 
 def unnotify(modeladmin, request, queryset):
     queryset.update(notifying=False)
 
 
-unnotify.short_description = 'перестать уведомлять'
+unnotify.short_description = 'Выкл уведомления об оплате'
 
 
 def ssh_update(modeladmin, request, queryset):
@@ -68,7 +68,7 @@ reboot_many.short_description = 'Перезагрузить модем'
 class ProxyAdmin(admin.ModelAdmin):
     # list_display = ('protocol', 'host', 'port', 'is_available', 'response', 'ip_change_interval', 'reconnect_mode')
     # list_display = ('ip', 'port', 'info', 'is_available', 'response')
-    actions = (reconnect_many, reboot_many, monitor, unmonitor, ssh_update)
+    actions = (reconnect_many, reboot_many, monitor, unmonitor, ssh_update, notify, unnotify)
     # list_display_links = []
 
     def get_queryset(self, request):

@@ -39,7 +39,7 @@ class Proxy(models.Model):
     host = models.CharField(max_length=50, verbose_name='хост')
     port = models.SmallIntegerField(verbose_name='порт')
 
-    ip = models.CharField(max_length=256, **nl_bl, verbose_name='сервер')
+    ip = models.CharField(max_length=256, **nl_bl, verbose_name='внешний адреса сервера')
 
     username = models.CharField(default=get_default('proxy_login', str), max_length=256, **nl_bl, verbose_name='логин прокси')
     password = models.CharField(default=get_default('proxy_password', str), max_length=256, **nl_bl, verbose_name='пароль прокси')
