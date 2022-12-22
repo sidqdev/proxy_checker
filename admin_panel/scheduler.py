@@ -219,7 +219,7 @@ if os.environ.get('status') == 'ok':
     except:
         pass
     job = scheduler.add_job(check, 'interval', seconds=int(sec))
-    scheduler.add_job(pay_notification_checker, 'cron', hour=0, minute=14, second=0)
+    scheduler.add_job(pay_notification_checker, 'cron', hour=0, minute=16, second=0)
     scheduler.add_job(change_proxies_ip, 'interval', seconds=10)
     scheduler.add_job(check_proxy_ssh, 'interval', seconds=30)
     scheduler.start()
