@@ -42,7 +42,8 @@ def send_notification(proxy: Proxy, info=None, is_available=False, ip='', sms=''
 def send_pay_notification(proxy: Proxy):
     bot_token =  Settings.objects.get(id='bot_token').value
 
-    message = str(proxy.info)
+    dt = (proxy.last_pay + timedelta(days=proxy.pay_days_interval)).strftime("%d.%m.%Y")
+    message = f"{proxy.info} need to top up account before {dt}"
 
     try:
         TeleBot(bot_token).send_message(proxy.user_id, message)
@@ -215,7 +216,7 @@ if os.environ.get('status') == 'ok':
     except:
         pass
     job = scheduler.add_job(check, 'interval', seconds=int(sec))
-    scheduler.add_job(pay_notification_checker, 'cron', hour=0, minute=24, second=0)
+    scheduler.add_job(pay_notification_checker, 'cron', hour=0, minute=37, second=0)
     scheduler.add_job(change_proxies_ip, 'interval', seconds=10)
     scheduler.add_job(check_proxy_ssh, 'interval', seconds=30)
     scheduler.start()
