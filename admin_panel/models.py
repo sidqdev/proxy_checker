@@ -39,7 +39,7 @@ class Proxy(models.Model):
     host = models.CharField(max_length=50, verbose_name='хост')
     port = models.SmallIntegerField(verbose_name='порт')
 
-    ip = models.CharField(max_length=256, **nl_bl, verbose_name='внешний адреса сервера')
+    ip = models.CharField(max_length=256, **nl_bl, verbose_name='внешний адрес сервера')
 
     username = models.CharField(default=get_default('proxy_login', str), max_length=256, **nl_bl, verbose_name='логин прокси')
     password = models.CharField(default=get_default('proxy_password', str), max_length=256, **nl_bl, verbose_name='пароль прокси')
@@ -65,7 +65,7 @@ class Proxy(models.Model):
     ssh_last_execute =  models.DateTimeField(default=datetime.now, **nl_bl, verbose_name='последнее выполнение команды ssh')
     ssh_execute_interval = models.SmallIntegerField(default=0, **nl_bl, verbose_name='интервал выполнения')
 
-    notifying = models.BooleanField(verbose_name="оповещать?", **nl_bl)
+    notifying = models.BooleanField(default=False, verbose_name="оповещать?")
     last_pay = models.DateField(default=date.today, **nl_bl, verbose_name='последняя дата оплаты')
     pay_days_interval = models.SmallIntegerField(default=get_default('pay_interval', int), **nl_bl, verbose_name='интервал оплаты (дни)')
     alert_interval_days = models.SmallIntegerField(default=get_default('alert_interval', int), max_length=256, **nl_bl, verbose_name='интервал оповещения (дни)')
