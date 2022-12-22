@@ -12,7 +12,7 @@ from .models import Proxy, Settings
 
 import json
 
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from .funtions import change_proxy_ip, reboot_modem, get_last_sms
 import pytz
 from paramiko import SSHClient, AutoAddPolicy
@@ -52,13 +52,16 @@ def send_pay_notification(proxy: Proxy):
 
 def pay_notification_checker():
     for proxy in Proxy.objects.all():
-        if proxy.last_pay + timedelta(proxy.allert_interval_days) <= datetime.date(datetime.now()) and proxy.user_id:
-            Thread(target=send_pay_notification, args=(proxy,)).start()
-            time.sleep(0.05)
-        
-        if proxy.last_pay + timedelta(proxy.pay_days_interval) <= datetime.date(datetime.now()):
+
+        if proxy.last_pay + timedelta(days=proxy.pay_days_interval) == date.today():
             proxy.last_pay = datetime.now()
             proxy.save()
+
+        if proxy.last_pay + timedelta(days=proxy.allert_interval_days) == date.today() and \
+        proxy.user_id and \
+        proxy.notifying:
+            Thread(target=send_pay_notification, args=(proxy,)).start()
+            time.sleep(0.05)
 
 
 
@@ -208,7 +211,7 @@ if os.environ.get('status') == 'ok':
     except:
         pass
     job = scheduler.add_job(check, 'interval', seconds=int(sec))
-    scheduler.add_job(pay_notification_checker, 'cron', hour=11, minute=0, second=0)
+    scheduler.add_job(pay_notification_checker, 'cron', hour=6, minute=0, second=0)
     scheduler.add_job(change_proxies_ip, 'interval', seconds=10)
     scheduler.add_job(check_proxy_ssh, 'interval', seconds=30)
     scheduler.start()
