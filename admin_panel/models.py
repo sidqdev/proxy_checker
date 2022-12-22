@@ -65,7 +65,7 @@ class Proxy(models.Model):
     ssh_last_execute =  models.DateTimeField(default=datetime.now, **nl_bl, verbose_name='последнее выполнение команды ssh')
     ssh_execute_interval = models.SmallIntegerField(default=0, **nl_bl, verbose_name='интервал выполнения')
 
-    notifying = models.BooleanField(verbose_name="оповещать?")
+    notifying = models.BooleanField(verbose_name="оповещать?", **nl_bl)
     last_pay = models.DateField(default=date.today, **nl_bl, verbose_name='последняя дата оплаты')
     pay_days_interval = models.SmallIntegerField(default=get_default('pay_interval', int), **nl_bl, verbose_name='интервал оплаты (дни)')
     alert_interval_days = models.SmallIntegerField(default=get_default('alert_interval', int), max_length=256, **nl_bl, verbose_name='интервал оповещения (дни)')
