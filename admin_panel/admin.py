@@ -7,6 +7,20 @@ import time
 from datetime import datetime, timedelta
 
 
+def notify(modeladmin, request, queryset):
+    queryset.update(notifying=True)
+
+
+notify.short_description = 'уведомлять'
+
+
+def unnotify(modeladmin, request, queryset):
+    queryset.update(notifying=False)
+
+
+unnotify.short_description = 'перестать уведомлять'
+
+
 def ssh_update(modeladmin, request, queryset):
     for proxy in queryset:
         Thread(target=scheduler.ssh_connect, args=(proxy,)).start()
