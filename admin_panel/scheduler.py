@@ -52,21 +52,24 @@ def send_pay_notification(proxy: Proxy):
 
 def pay_notification_checker():
     for proxy in Proxy.objects.all():
-        print("loop")
-        print(proxy.last_pay + timedelta(days=proxy.pay_days_interval))
-        print(date.today())
+        try:
+            print("loop")
+            print(proxy.last_pay + timedelta(days=proxy.pay_days_interval))
+            print(date.today())
 
-        if proxy.last_pay + timedelta(days=proxy.alert_interval_days) == date.today() and \
-        proxy.user_id and \
-        proxy.notifying:
-            print("alert")
-            Thread(target=send_pay_notification, args=(proxy,)).start()
-            time.sleep(0.05)
-        
-        if proxy.last_pay + timedelta(days=proxy.pay_days_interval) == date.today():
-            print('proxy edit')
-            proxy.last_pay = date.today()
-            proxy.save()
+            if proxy.last_pay + timedelta(days=proxy.alert_interval_days) == date.today() and \
+            proxy.user_id and \
+            proxy.notifying:
+                print("alert")
+                Thread(target=send_pay_notification, args=(proxy,)).start()
+                time.sleep(0.05)
+            
+            if proxy.last_pay + timedelta(days=proxy.pay_days_interval) == date.today():
+                print('proxy edit')
+                proxy.last_pay = date.today()
+                proxy.save()
+        except Exception as e:
+            print("err", e)
 
 
 
