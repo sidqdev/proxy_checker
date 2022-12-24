@@ -52,7 +52,7 @@ class Proxy(models.Model):
 
     last_ip_change_time = models.DateTimeField(default=datetime.now, verbose_name='последнее изменение айпи')
     ip_change_interval = models.SmallIntegerField(default=0, verbose_name='интервал смены айпи')
-    reconnect_mode = models.CharField(max_length=256, default=get_default('modem_mode_switch', 'str'), **nl_bl, verbose_name='режим переключения')
+    reconnect_mode = models.CharField(max_length=256, default=get_default('modem_mode_switch', str), **nl_bl, verbose_name='режим переключения')
     owner = models.ForeignKey(to=User, on_delete=models.SET_NULL, **nl_bl, verbose_name='владелец')
 
     monitoring = models.BooleanField(default=True, verbose_name="мониторинг")
